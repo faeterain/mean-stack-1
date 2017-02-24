@@ -1,0 +1,37 @@
+<% layout('layout') %>
+<div class="container">
+
+    <div class="card card-block">
+        <h4 class="card-title txt-center">Sign up</h4>
+        <div class="card-text">
+            <form method="post" action="/signup">
+                <div class="form-group row">
+                    <label for="fullname" class="col-sm-2 col-form-label">Fullname</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="fullname" placeholder="Fullname">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="password" class="col-sm-2 col-form-label">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-sm-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="txt-center">
+            Already have account? - <a href="/login">Login</a>
+        </div>
+    </div>
+</div>
