@@ -12,10 +12,15 @@ var userSchema = mongoose.Schema({
     },
     passwordResetToken: {type: String, default: ''},
     passwordResetExpires: {type: Date, default: Date.now},
-
 })
 
 userSchema.methods.encryptPassword = (password)=>{
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
+
+
+userSchema.methods.validPassword = (password)=>{
+    return bcrypt.hashSync(password, this.password);
+}
+
 module.exports = mongoose.model('User', userSchema);
