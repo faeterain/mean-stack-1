@@ -5,12 +5,15 @@ var ejs = require('ejs');
 var engine = require('ejs-mate');
 var session = require('express-session');
 var mongoose = require('mongoose');
+var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
-
+var flash = require('connect-flash');
 
 var app = express();
 
 mongoose.connect('mongodb://localhost/rateme');
+
+require('./config/passport');
 
 app.use(express.static('public'));
 app.engine('ejs', engine);
@@ -18,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(flash());
 
 app.use(session({
     secret: 'teskey',
@@ -26,7 +30,7 @@ app.use(session({
     store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
-require('./routes/user')(app);
+require('./routes/user')(app, passport);
 
 app.listen(3000, function () {
     console.log(('Listening on port 3000'));

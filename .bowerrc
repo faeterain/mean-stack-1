@@ -1,9 +1,4 @@
 {
   "directory": "public/bower_components/",
-  "timeout": 120000,
-  "registry": {
-    "search": [
-      "http://localhost:3000"
-    ]
-  }
+  "timeout": 120000
 }
