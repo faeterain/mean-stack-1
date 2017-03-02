@@ -40,7 +40,6 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'password',
     passReqToCallback: true
 }, (req, email, password, done) => {
-    console.log(1);
     User.findOne({'email': email}, (err, user) => {
         if(err){
             return done(err);

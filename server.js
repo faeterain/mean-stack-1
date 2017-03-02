@@ -10,14 +10,18 @@ var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var flash = require('connect-flash');
 
+
 var app = express();
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/rateme');
 
 require('./config/passport');
-require('./secret/secret');
+require('./secret/authenticate')(express,app);
+var secret = require('./secret/secret');
 
+
+app.set('superSecret', secret.secret);
 app.use(express.static('public'));
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
