@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.1.5",
+    "basic-auth": "1.1.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.16.1",
     "connect-flash": "^0.1.1",
@@ -18,15 +19,21 @@
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
     "ejs-mate": "^2.3.0",
+    "errorhandler": "1.5.0",
     "express": "^4.14.1",
     "express-session": "^1.15.1",
     "express-validator": "^3.1.2",
+    "hbs": "4.0.1",
     "jsonwebtoken": "^7.3.0",
+    "method-override": "2.3.7",
     "mongoose": "^4.8.4",
+    "morgan": "1.8.1",
     "nodemailer": "^3.1.4",
     "nodemailer-smtp-transport": "^2.7.2",
     "nodemon": "^1.11.0",
+    "oauthorize": "^0.1.0",
     "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
     "passport-local": "^1.0.0"
   }
 }

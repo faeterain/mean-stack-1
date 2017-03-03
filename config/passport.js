@@ -1,6 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var BasicStrategy = require('passport-http').BasicStrategy;
+var OAuth2Strategy = require('passport-oauth2').Strategy;
 var User = require('../models/user');
 
 passport.serializeUser((user, done) => {
@@ -13,12 +14,24 @@ passport.deserializeUser((id, done) => {
     });
 });
 
+passport.use(new OAuth2Strategy({
+        authorizationURL: 'https://www.example.com/oauth2/authorize',
+        tokenURL: 'https://www.example.com/oauth2/token',
+        clientID: EXAMPLE_CLIENT_ID,
+        clientSecret: EXAMPLE_CLIENT_SECRET,
+        callbackURL: "http://localhost:3000/auth/example/callback"
+    },
+    function(accessToken, refreshToken, profile, cb) {
+        User.findOrCreate({ exampleId: profile.id }, function (err, user) {
+            return cb(err, user);
+        });
+    }
+));
 passport.use('local.login', new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
         passReqToCallback: true
     }, (req, email, password, done) => {
-        console.log(1);
         User.findOne({'email': email}, (err, user) => {
             if(err){
                 return done(err);
@@ -59,3 +72,16 @@ passport.use('local.signup', new LocalStrategy({
         });
     })
 }));
+
+passport.use(new BasicStrategy(
+    function(email, password, done) {
+        User.findOne({ email: email }, function (err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            if (!user.encryptPassword(password)) {
+                return done(null, false);
+            }
+            return done(null, user);
+        });
+    }
+));

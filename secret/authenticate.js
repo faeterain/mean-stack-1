@@ -1,6 +1,8 @@
 // get an instance of the router for api routes
 var jwt    = require('jsonwebtoken');
 
+
+
 module.exports = (express,app) => {
     var apiRoutes = express.Router();
 
@@ -35,6 +37,5 @@ module.exports = (express,app) => {
 
         }
     });
-
-    app.use('/users', apiRoutes);
+    // app.use('/users',apiRoutes);
 }

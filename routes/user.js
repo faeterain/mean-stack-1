@@ -11,6 +11,9 @@ module.exports = (app, passport) => {
         res.render('index', {title: 'Index || Rate Me'});
     });
     app.post('/authenticate', (req, res) => {
+        if(req.body.length){
+            req.body = req.body[0];
+        }
 
         User.findOne({
             email: req.body.email || req.body.username
@@ -46,6 +49,7 @@ module.exports = (app, passport) => {
 
         });
     });
+
     app.get('/api', function (req, res, next) {
         res.render('api', {title: 'API || Rate Me'});
     });
@@ -66,6 +70,7 @@ module.exports = (app, passport) => {
         });
     });
     app.put('/users/:id', updateValidate, (req, res) => {
+
         User.findById(req.params.id, (err, users) => {
             if (err)
                 res.status(500).json({'errors': err});
@@ -139,6 +144,12 @@ module.exports = (app, passport) => {
             });
         })(req, res, next);
     });
+
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
     app.get('/home', function (req, res, next) {
         res.render('pages/home', {title: 'Home || Rate Me'});
     });
@@ -252,6 +263,9 @@ module.exports = (app, passport) => {
 
 
 function validate(req, res, next) {
+    if(req.body.length){
+        req.body = req.body[0];
+    }
     req.checkBody('fullname', 'Fullname is Required').notEmpty();
     req.checkBody('fullname', 'Fullname must not be less than 5').isLength({min: 5});
     req.checkBody('email', 'Email is Required').notEmpty();
@@ -276,6 +290,9 @@ function validate(req, res, next) {
 
 
 function loginValidate(req, res, next) {
+    if(req.body.length){
+        req.body = req.body[0];
+    }
     req.checkBody('email', 'Email is Required').notEmpty();
     req.checkBody('email', 'Email is Invalid').isEmail();
     req.checkBody('password', 'Password is Required').notEmpty();
@@ -296,10 +313,18 @@ function loginValidate(req, res, next) {
 }
 
 function updateValidate(req, res, next) {
-    req.checkBody('fullname', 'Fullname is Required').notEmpty();
-    req.checkBody('fullname', 'Fullname must not be less than 5').isLength({min: 5});
-    req.checkBody('password', 'Password is Required').notEmpty();
-    req.checkBody('password', 'Password must not be less than 5').isLength({min: 8});
+
+    if(req.body.length){
+        req.body = req.body[0];
+    }
+    if(req.body.fullname){
+        req.checkBody('fullname', 'Fullname is Required').notEmpty();
+        req.checkBody('fullname', 'Fullname must not be less than 5').isLength({min: 5});
+    }
+    if(req.body.password){
+        req.checkBody('password', 'Password is Required').notEmpty();
+        req.checkBody('password', 'Password must not be less than 5').isLength({min: 8});
+    }
 
     var updateErrors = req.validationErrors();
 
@@ -314,4 +339,11 @@ function updateValidate(req, res, next) {
     else {
         return next();
     }
+}
+
+
+var isAuthenticated = function (req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    res.status(400).json({'errors': 'Not authenticate'});
 }
