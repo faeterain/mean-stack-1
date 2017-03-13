@@ -37,5 +37,5 @@ module.exports = (express,app) => {
 
         }
     });
-    // app.use('/users',apiRoutes);
+    app.use('/token/users',apiRoutes);
 }

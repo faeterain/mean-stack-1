@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
 var userSchema = mongoose.Schema({
-    fullname: {type: String, required: true},
-    email: {type: String, required: true},
-    password: {type: String, required: true},
+    fullname: {type: String},
+    email: {type: String},
+    password: {type: String},
     role: {type: String, default: ''},
     company: {
         name: {type: String, default:''},
@@ -12,6 +12,12 @@ var userSchema = mongoose.Schema({
     },
     passwordResetToken: {type: String, default: ''},
     passwordResetExpires: {type: Date, default: Date.now},
+    google           : {
+        id           : String,
+        token        : String,
+        email        : String,
+        name         : String
+    }
 })
 
 userSchema.methods.encryptPassword = (password)=>{

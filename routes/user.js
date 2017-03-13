@@ -10,6 +10,8 @@ module.exports = (app, passport) => {
     app.get('/', function (req, res, next) {
         res.render('index', {title: 'Index || Rate Me'});
     });
+
+    // token for jwt type
     app.post('/authenticate', (req, res) => {
         if(req.body.length){
             req.body = req.body[0];
@@ -61,6 +63,33 @@ module.exports = (app, passport) => {
             res.status(200).json(users);
         });
     });
+    app.get('/oauth2/users',passport.authenticate('bearer', { session: false }), function (req, res, next) {
+        User.find({}, (err, users) => {
+            if (err)
+                res.status(500).json({'errors': err});
+
+            res.status(200).json(users);
+        });
+    });
+
+    app.get('/token/users', function (req, res, next) {
+        User.find({}, (err, users) => {
+            if (err)
+                res.status(500).json({'errors': err});
+
+            res.status(200).json(users);
+        });
+    });
+
+
+    app.get('/basic/users',passport.authenticate('basic', { session: false }), function (req, res, next) {
+        User.find({}, (err, users) => {
+            if (err)
+                res.status(500).json({'errors': err});
+
+            res.status(200).json(users);
+        });
+    });
     app.get('/users/:id', (req, res) => {
         User.findById(req.params.id, (err, users) => {
             if (err)
@@ -97,6 +126,22 @@ module.exports = (app, passport) => {
         });
     });
 
+    app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+    // the callback after google has authenticated the user
+    app.get('/auth/google/callback',(req, res, next) => {
+        passport.authenticate('google', {
+            failureRedirect : '/'
+        },
+        function(err, user) {
+            console.log('req');
+            console.log(err);
+            console.log('user');
+            console.log(user);
+            res.json(user);
+        }
+        )(req, res, next);
+    });
 
     app.get('/signup', (req, res) => {
         var err = req.flash('error');
@@ -148,6 +193,13 @@ module.exports = (app, passport) => {
     app.get('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
+    });
+    app.get('/unlink/google', isAuthenticated, function(req, res) {
+        var user          = req.user;
+        user.google.token = undefined;
+        user.save(function(err) {
+            res.redirect('/');
+        });
     });
 
     app.get('/home', function (req, res, next) {
